@@ -18,7 +18,9 @@ const neo4j = require('neo4j-driver')
 const driver = neo4j.driver(process.env.REACT_APP_NEO4JURI, neo4j.auth.basic(process.env.REACT_APP_NEO4JUSER, process.env.REACT_APP_NEO4JPASSWORD))
 const target_language = process.env.REACT_APP_LANGUAGE
 
+
 //const target_language = "Chinese"
+
 
 //const target_language = "Japanese"
 const lang_p = language_parameters(target_language)
@@ -88,6 +90,10 @@ MATCH (o:Organization)<-[]-(e)-[]-> (c:Condition), (e)-[:HAS_END]->(e2) WHERE to
 
 #Break down the number of COVID-19 patients per race.
 MATCH p=(pa:Patient)-[:HAS_ENCOUNTER]->(e)-[:HAS_CONDITION]-> (c:Condition) WHERE toLower(c.description) CONTAINS toLower("COVID-19") RETURN DISTINCT pa.race, COUNT(pa.race) AS count_race ORDER BY count_race DESC
+
+#Break down the number of Pneumonia patients per ethnicity.
+MATCH p=(pa:Patient)-[:HAS_ENCOUNTER]->(e)-[:HAS_CONDITION]-> (c:Condition) WHERE toLower(c.description) CONTAINS toLower("Pneumonia") RETURN DISTINCT pa.ethnicity, COUNT(pa.ethnicity) AS count_ethnicity ORDER BY count_ethnicity DESC
+
 
 #Break down the number of COVID-19 patients per ethnicity.
 MATCH p=(pa:Patient)-[:HAS_ENCOUNTER]->(e)-[:HAS_CONDITION]-> (c:Condition) WHERE toLower(c.description) CONTAINS toLower("COVID-19") RETURN DISTINCT pa.ethnicity, COUNT(pa.ethnicity) AS count_ethnicity ORDER BY count_ethnicity DESC

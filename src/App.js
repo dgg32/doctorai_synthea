@@ -16,6 +16,7 @@ const alan_api = process.env.REACT_APP_ALAN_API;
 
 //const target_language = "Chinese"
 //const target_language = "Japanese"
+//const target_language = "English"
 const lang_p = language_parameters(target_language)
 
 const ENABLE_THEME = true
