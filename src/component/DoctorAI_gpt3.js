@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Loading } from 'react-simple-chatbot';
 import callTranslate from './translate_de_to_en';
 import language_parameters from './language_setting';
+import Parser from 'html-react-parser';
 
 import Speech from 'speak-tts'
 
@@ -17,10 +18,7 @@ const neo4j = require('neo4j-driver')
 const driver = neo4j.driver(process.env.REACT_APP_NEO4JURI, neo4j.auth.basic(process.env.REACT_APP_NEO4JUSER, process.env.REACT_APP_NEO4JPASSWORD))
 const target_language = process.env.REACT_APP_LANGUAGE
 
-
 //const target_language = "Chinese"
-//const target_language = "English"
-
 
 //const target_language = "Japanese"
 const lang_p = language_parameters(target_language)
@@ -49,6 +47,7 @@ speech.init({
 })
 
 class DoctorAI extends Component {
+  is_table = false;
   constructor(props) {
     super(props);
 
@@ -58,6 +57,7 @@ class DoctorAI extends Component {
     };
 
     this.triggetNext = this.triggetNext.bind(this);
+    
   }
 
   callDoctorAI() {
@@ -83,7 +83,7 @@ MATCH (pr:Provider) -[:HAS_ADDRESS]-> (a:Address) WHERE pr.name = "Ashlyn643 Wal
 #How often does each doctor cure COVID-19?
 MATCH (pr:Provider)<-[]-(e)-[]-> (c:Condition), (e)-[:HAS_END]->(e2) WHERE toLower(c.description) CONTAINS toLower("COVID-19") RETURN DISTINCT pr.name, COUNT(pr) AS count_pr ORDER BY count_pr DESC
 
-#How ofter does each hospital cure COVIV-19?
+#How often does each hospital cure COVIV-19?
 MATCH (o:Organization)<-[]-(e)-[]-> (c:Condition), (e)-[:HAS_END]->(e2) WHERE toLower(c.description) CONTAINS toLower("COVID-19") RETURN DISTINCT o.name, COUNT(o) AS count_o ORDER BY count_o DESC
 
 #Break down the number of COVID-19 patients per race.
@@ -134,13 +134,29 @@ MATCH p=(pa:Patient)-[:HAS_ENCOUNTER]->(e)-[:HAS_CONDITION]-> (c:Condition) WHER
             //const singleRecord = result.records[0]
 
             const records = result.records
-
+            
+            console.log(records)
             records.forEach(element => {
-              textToSpeak += element.get(0) + ", "
+              
+              if (element.length > 1)
+              {
+                self.is_table = true;
+                //textToSpeak += element.get(0) + ", " + element.get(1)["low"] + "\n\n"
+                textToSpeak += '<tr><td>' + element.get(0) + '</td><td>' + element.get(1) + '</td></tr>'
+              }
+              else
+              {
+                textToSpeak += element.get(0) + ", "
+              }
+              
             });
+            console.log("array text", textToSpeak)
 
-            //textToSpeak = singleRecord.get(0)
-            textToSpeak = textToSpeak.slice(0, -2).trim()
+            if (self.is_table === true)
+            {textToSpeak = "<table><tbody>" + textToSpeak + "</tbody></table>"}
+
+            else
+            {textToSpeak = textToSpeak.slice(0, -2).trim()}
             console.log("before translation " + "Translate this into " + lang_p['target_language'] + "\n\n" + textToSpeak)
             if (lang_p['target_language'] !== "English")
             {
@@ -198,11 +214,25 @@ MATCH p=(pa:Patient)-[:HAS_ENCOUNTER]->(e)-[:HAS_CONDITION]-> (c:Condition) WHER
 
   render() {
     const { loading, result } = this.state;
+
     const lines = result.split("\n");
-    const elements = [];
-    for (const [index, value] of lines.entries()) {
-      elements.push(<span key={index}>{value}<br /></span>)
+
+    var elements;
+
+    if (this.is_table === true)
+    {
+      elements = Parser(result);
     }
+    
+    else 
+    {
+      elements = [];
+      for (const [index, value] of lines.entries()) {
+        elements.push(<span key={index}>{value}<br /></span>)
+      }
+    }
+    
+    //console.log("render elements", elements)
 
     return (
       <div className="bot-response">

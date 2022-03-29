@@ -1,6 +1,6 @@
-# Welcome to Doctor.ai React Front-end 
+# Welcome to Doctor.ai React Front-end with Synthea
 
-This is the React front-end app for Doctor.ai with Alan [Integrate Alan Speech-to-Text to Doctor.ai](https://dgg32.medium.com/can-doctor-ai-understand-german-chinese-and-japanese-gpt-3-answers-ja-%E5%8F%AF%E4%BB%A5-and-%E3%81%84%E3%81%84%E3%82%88-b63b10d67bf4).
+This is the React front-end app for Doctor.ai with Synthea data [Develop Doctor.ai with Synthetic Patient Data]().
 
 
 
@@ -20,7 +20,6 @@ Please refer to our article in Medium.
 
 ## Authors
 *  **Sixing Huang**
-*  **Liang Li**
 
 ## Supported by
 
