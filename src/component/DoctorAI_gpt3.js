@@ -85,7 +85,7 @@ MATCH (pr:Provider) -[:HAS_ADDRESS]-> (a:Address) WHERE pr.name = "Ashlyn643 Wal
 #How often does each doctor cure COVID-19?
 MATCH (pr:Provider)<-[]-(e)-[]-> (c:Condition), (e)-[:HAS_END]->(e2) WHERE toLower(c.description) CONTAINS toLower("COVID-19") RETURN DISTINCT pr.name, COUNT(pr) AS count_pr ORDER BY count_pr DESC
 
-#How often does each hospital cure COVIV-19?
+#How often does each hospital cure COVID-19?
 MATCH (o:Organization)<-[]-(e)-[]-> (c:Condition), (e)-[:HAS_END]->(e2) WHERE toLower(c.description) CONTAINS toLower("COVID-19") RETURN DISTINCT o.name, COUNT(o) AS count_o ORDER BY count_o DESC
 
 #Break down the number of COVID-19 patients per race.
