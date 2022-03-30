@@ -1,6 +1,6 @@
 # Welcome to Doctor.ai React Front-end with Synthea
 
-This is the React front-end app for Doctor.ai with Synthea data [Develop Doctor.ai with Synthetic Patient Data]().
+This is the React front-end app for Doctor.ai with Synthea data [Develop Doctor.ai with Synthetic Patient Data from Synthea](https://medium.com/p/5c2410b08d51).
 
 
 
